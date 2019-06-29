@@ -2,6 +2,7 @@ import object_detection_api
 import os
 from PIL import Image
 from flask import Flask, request, Response
+from werkzeug.utils import secure_filename
 
 from flask_ngrok import run_with_ngrok
 
@@ -57,13 +58,15 @@ def image():
             threshold = 0.5
         else:
             threshold = float(threshold)
-
+        img = cv2.imdecode(numpy.fromstring(request.files['file'].read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
+        print("img", img)
         # finally run the image through tensor flow object detection`
         image_object = Image.open(image_file)
+        print("image_object", image_object)
         objects = object_detection_api.get_objects(image_object, threshold)
         print("objects", objects)
         # return objects
-        return Response("OK")
+        return objects
 
     except Exception as e:
         print('POST /image error: %e' % e)
