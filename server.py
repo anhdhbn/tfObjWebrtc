@@ -44,7 +44,7 @@ def test():
     TEST_IMAGE_PATHS = [os.path.join(PATH_TO_TEST_IMAGES_DIR, 'image{}.jpg'.format(i)) for i in range(1, 3)]
 
     image = Image.open(TEST_IMAGE_PATHS[0])
-    objects = object_detection_api.get_objects(image)
+    objects = object_detection_api.run(image)
 
     return objects
 
