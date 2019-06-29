@@ -67,9 +67,9 @@ def image():
 
 if __name__ == '__main__':
 	# without SSL
-    import threading
+    # import threading
     # threading.Thread(target=app.run, kwargs={'host':'0.0.0.0','port':80}).start() 
-    app.run(debug=True, host='0.0.0.0')
-
+    # app.run(debug=True, host='0.0.0.0')
+    app.run()
 	# with SSL
     #app.run(debug=True, host='0.0.0.0', ssl_context=('ssl/server.crt', 'ssl/server.key'))
