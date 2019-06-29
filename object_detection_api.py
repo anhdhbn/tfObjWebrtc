@@ -239,5 +239,5 @@ def run_inference_for_single_image(image, graph, threshold):
       # if 'detection_masks' in output_dict:
       #   output_dict['detection_masks'] = output_dict['detection_masks'][0]
       # outputJson = json.dumps([ob.__dict__ for ob in output])
-      outputJson = json.dumps(output, default=obj_dict)
+      outputJson = json.dumps(output, default = lambda x: x.__dict__)
       return outputJson
