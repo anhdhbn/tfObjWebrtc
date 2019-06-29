@@ -213,7 +213,7 @@ def run_inference_for_single_image(image, graph, threshold):
       item.numObjects = obj_above_thresh
       item.threshold = threshold
       output.append(item)
-
+      print(item)
       for c in range(0, len(classes)):
         class_name = category_index[classes[c]]['name']
         if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
@@ -227,9 +227,9 @@ def run_inference_for_single_image(image, graph, threshold):
             item.x = float(boxes[c][1])
             item.height = float(boxes[c][2])
             item.width = float(boxes[c][3])
-
-            output.append(item)
             print(item)
+            output.append(item)
+            
 
       # if 'detection_masks' in output_dict:
       #   output_dict['detection_masks'] = output_dict['detection_masks'][0]
