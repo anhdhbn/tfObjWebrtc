@@ -65,7 +65,7 @@ def image():
         # finally run the image through tensor flow object detection`
         image_object = Image.open(image_file)
         # print("image_object", image_object)
-        objects = object_detection_api.get_objects(image_object, threshold)
+        objects = object_detection_api.run(image_object, threshold)
         print("objects", objects)
         # return objects
         return objects
