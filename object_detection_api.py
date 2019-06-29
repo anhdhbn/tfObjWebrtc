@@ -95,7 +95,7 @@ def get_objects(image, threshold=0.5):
     print("tensor_dict", detection_boxes, detection_scores, detection_classes, num_detections)
     (boxes, scores, classes, num) = sess.run(
         [detection_boxes, detection_scores, detection_classes, num_detections],
-        feed_dict={image_tensor: image_np_expanded})
+        feed_dict={image_tensor: image_np})
 
     # ops = tf.get_default_graph().get_operations()
     # all_tensor_names = {output.name for op in ops for output in op.outputs}
