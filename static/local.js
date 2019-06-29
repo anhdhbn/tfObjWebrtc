@@ -7,6 +7,11 @@ const constraints = {
     }
 };
 
+let supports = navigator.mediaDevices.getSupportedConstraints();
+if( supports['facingMode'] === true ) {
+  flipBtn.disabled = false;
+}
+
 navigator.mediaDevices.getUserMedia(constraints)
     .then(stream => {
         document.getElementById("myVideo").srcObject = stream;
