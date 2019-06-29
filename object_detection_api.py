@@ -211,7 +211,8 @@ def run_inference_for_single_image(image, graph, threshold):
       item.version = "0.0.1"
       item.numObjects = obj_above_thresh
       item.threshold = threshold
-      print(item.toJSON())
+      # print(item.toJSON())
+      print(type(obj_above_thresh), )
       output.append(item)
 
       for c in range(0, len(classes)):
