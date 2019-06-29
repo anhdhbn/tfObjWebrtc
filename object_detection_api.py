@@ -73,17 +73,17 @@ with detection_graph.as_default():
     detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
     detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
     num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-    ops = detection_graph.get_operations()
-    all_tensor_names = {output.name for op in ops for output in op.outputs}
-    tensor_dict = {}
-    for key in [
-        'num_detections', 'detection_boxes', 'detection_scores',
-        'detection_classes', 'detection_masks'
-    ]:
-      tensor_name = key + ':0'
-      if tensor_name in all_tensor_names:
-        tensor_dict[key] = detection_graph.get_tensor_by_name(
-            tensor_name)
+    # ops = detection_graph.get_operations()
+    # all_tensor_names = {output.name for op in ops for output in op.outputs}
+    # tensor_dict = {}
+    # for key in [
+    #     'num_detections', 'detection_boxes', 'detection_scores',
+    #     'detection_classes', 'detection_masks'
+    # ]:
+    #   tensor_name = key + ':0'
+    #   if tensor_name in all_tensor_names:
+    #     tensor_dict[key] = detection_graph.get_tensor_by_name(
+    #         tensor_name)
 
 # added to put object in JSON
 class Object(object):
@@ -155,7 +155,7 @@ def get_objects(image, threshold=0.5):
     # image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
 
       # Run inference
-    output_dict = sess.run(tensor_dict,
+    output_dict = sess.run([detection_boxes, detection_scores, detection_classes, num_detections],
                              feed_dict={image_tensor: image_np_expanded})
 
       # all outputs are float32 numpy arrays, so convert types as appropriate
