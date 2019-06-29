@@ -209,7 +209,7 @@ def run_inference_for_single_image(image, graph, threshold):
       # Add some metadata to the output
       item = Object()
       item.version = "0.0.1"
-      item.numObjects = obj_above_thresh
+      item.numObjects = int(obj_above_thresh)
       item.threshold = threshold
       # print(item.toJSON())
       print(type(obj_above_thresh), obj_above_thresh.shape)
