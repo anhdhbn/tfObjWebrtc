@@ -45,8 +45,8 @@ def test():
 
     image = Image.open(TEST_IMAGE_PATHS[0])
     objects = object_detection_api.run(image)
-    print(objects[0])
-    return objects[0]
+    print(objects)
+    return "objects"
 
 
 @app.route('/image', methods=['POST'])
