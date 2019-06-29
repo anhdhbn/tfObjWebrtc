@@ -29,10 +29,14 @@
 
 <body>
     <video id="myVideo" autoplay>
-        <button disabled id="flip-btn">
-            Flip Camera
-        </button>
+        
     </video>
+    <button disabled id="flip-btn">
+        Flip Camera
+    </button>
+    <div class="select">
+        <label for="videoSource">Video source: </label><select id="videoSource"></select>
+    </div>
     <script src="/static/local.js"></script>
     <script id="objDetect" src="/static/objDetect.js" data-source="myVideo" data-mirror="true" data-uploadWidth="1280"
         data-scoreThreshold="0.40"></script>

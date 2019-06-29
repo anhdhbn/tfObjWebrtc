@@ -6,6 +6,7 @@ const constraints = {
         height: {min: 480, ideal: 720, max: 1080}
     }
 };
+
 let flipBtn = document.querySelector('#flip-btn');
 let supports = navigator.mediaDevices.getSupportedConstraints();
 if( supports['facingMode'] === true ) {
