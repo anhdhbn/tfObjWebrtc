@@ -96,9 +96,11 @@ def get_objects(image, threshold=0.5):
     scores = np.squeeze(scores)
     boxes = np.squeeze(boxes)
 
+    print("="*30)
     obj_above_thresh = sum(n > threshold for n in scores)
     print("detected %s objects in image above a %s score" % (obj_above_thresh, threshold))
 
+    print("="*50)
     output = []
 
     # Add some metadata to the output
@@ -107,8 +109,8 @@ def get_objects(image, threshold=0.5):
     item.numObjects = obj_above_thresh
     item.threshold = threshold
     output.append(item)
-
-    print("="*30)
+    print("="*100)
+    
 
     for c in range(0, len(classes)):
         class_name = category_index[classes[c]]['name']
