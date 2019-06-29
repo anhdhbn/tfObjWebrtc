@@ -163,11 +163,11 @@ def get_objects(image, threshold=0.5):
 
     # outputJson = json.dumps([ob.__dict__ for ob in output])
     # return outputJson
-    image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
+    # image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
 
       # Run inference
     output_dict = sess.run(tensor_dict,
-                             feed_dict={image_tensor: image})
+                             feed_dict={image_tensor: image_np_expanded})
 
       # all outputs are float32 numpy arrays, so convert types as appropriate
     num = int(output_dict['num_detections'][0])
