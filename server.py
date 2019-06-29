@@ -53,7 +53,7 @@ def test():
 def image():
     try:
         image_file = request.files['image']  # get the image
-        print("image_file", image_file)
+        # print("image_file", image_file)
         # Set an image confidence threshold value to limit returned data
         threshold = request.form.get('threshold')
         if threshold is None:
