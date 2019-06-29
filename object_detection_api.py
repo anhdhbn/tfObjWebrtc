@@ -197,8 +197,8 @@ def run_inference_for_single_image(image, graph, threshold):
                              feed_dict={image_tensor: image})
 
       # all outputs are float32 numpy arrays, so convert types as appropriate
-      # num = int(output_dict['num_detections'][0])
-      num = (output_dict['num_detections'][0])
+      num = int(output_dict['num_detections'][0])
+      # num = (output_dict['num_detections'][0])
       classes = output_dict['detection_classes'][0].astype(np.int64)
       boxes = output_dict['detection_boxes'][0]
       scores = output_dict['detection_scores'][0]
@@ -229,6 +229,7 @@ def run_inference_for_single_image(image, graph, threshold):
             item.width = float(boxes[c][3])
 
             output.append(item)
+            print(item)
 
       # if 'detection_masks' in output_dict:
       #   output_dict['detection_masks'] = output_dict['detection_masks'][0]
