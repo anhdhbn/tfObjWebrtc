@@ -73,3 +73,7 @@ function start() {
 videoSelect.onchange = start;
 
 start()
+
+
+var offsetHeight = document.getElementById('myVideo').offsetHeight;
+videoSelect.height = offsetHeight + 100
