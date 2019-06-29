@@ -158,9 +158,9 @@ def run(image, threshold=0.5):
   image_np = load_image_into_numpy_array(image)
   # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
   image_np_expanded = np.expand_dims(image_np, axis=0)
-  return run_inference_for_single_image(image_np_expanded, detection_graph)
+  return run_inference_for_single_image(image_np_expanded, detection_graph, threshold)
 
-def run_inference_for_single_image(image, graph):
+def run_inference_for_single_image(image, graph, threshold):
   with graph.as_default():
     with tf.Session() as sess:
       # Get handles to input and output tensors
