@@ -73,7 +73,6 @@ with detection_graph.as_default():
     detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
     detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
     num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-
 # added to put object in JSON
 class Object(object):
     def __init__(self):
@@ -87,30 +86,119 @@ def get_objects(image, threshold=0.5):
     # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
     image_np_expanded = np.expand_dims(image_np, axis=0)
     # Actual detection.
-    (boxes, scores, classes, num) = sess.run(
+
+      # Run inference
+    output_dict = sess.run(
         [detection_boxes, detection_scores, detection_classes, num_detections],
         feed_dict={image_tensor: image_np_expanded})
 
-    classes = np.squeeze(classes).astype(np.int32)
-    scores = np.squeeze(scores)
-    boxes = np.squeeze(boxes)
+      # all outputs are float32 numpy arrays, so convert types as appropriate
+    num = int(output_dict['num_detections'][0])
+      # num = (output_dict['num_detections'][0])
+    classes = output_dict['detection_classes'][0].astype(np.int64)
+    boxes = output_dict['detection_boxes'][0]
+    scores = output_dict['detection_scores'][0]
 
     obj_above_thresh = sum(n > threshold for n in scores)
     print("detected %s objects in image above a %s score" % (obj_above_thresh, threshold))
-
     output = []
 
-    # Add some metadata to the output
+      # Add some metadata to the output
     item = Object()
     item.version = "0.0.1"
-    item.numObjects = obj_above_thresh
+    item.numObjects = int(obj_above_thresh)
     item.threshold = threshold
+      # print(item.toJSON())
+      # print(type(obj_above_thresh), obj_above_thresh.shape)
     output.append(item)
 
     for c in range(0, len(classes)):
+      class_name = category_index[classes[c]]['name']
+      if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
+          print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
+          item = Object()
+          item.name = 'Object'
+          item.class_name = class_name
+          item.score = float(scores[c])
+          item.y = float(boxes[c][0])
+          item.x = float(boxes[c][1])
+          item.height = float(boxes[c][2])
+          item.width = float(boxes[c][3])
+            
+          output.append(item)
+    outputJson = json.dumps(output, default = lambda x: x.__dict__)
+    return outputJson
+
+def run(image, threshold=0.5):
+  image_np = load_image_into_numpy_array(image)
+  # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+  image_np_expanded = np.expand_dims(image_np, axis=0)
+  return run_inference_for_single_image(image_np_expanded, detection_graph, threshold)
+
+def run_inference_for_single_image(image, graph, threshold):
+  with graph.as_default():
+    with tf.Session() as sess:
+      # Get handles to input and output tensors
+      ops = tf.get_default_graph().get_operations()
+      all_tensor_names = {output.name for op in ops for output in op.outputs}
+      tensor_dict = {}
+      for key in [
+          'num_detections', 'detection_boxes', 'detection_scores',
+          'detection_classes', 'detection_masks'
+      ]:
+        tensor_name = key + ':0'
+        if tensor_name in all_tensor_names:
+          tensor_dict[key] = tf.get_default_graph().get_tensor_by_name(
+              tensor_name)
+      if 'detection_masks' in tensor_dict:
+        # The following processing is only for single image
+        detection_boxes = tf.squeeze(tensor_dict['detection_boxes'], [0])
+        detection_masks = tf.squeeze(tensor_dict['detection_masks'], [0])
+        # Reframe is required to translate mask from box coordinates to image coordinates and fit the image size.
+        real_num_detection = tf.cast(tensor_dict['num_detections'][0], tf.int32)
+        detection_boxes = tf.slice(detection_boxes, [0, 0], [real_num_detection, -1])
+        detection_masks = tf.slice(detection_masks, [0, 0, 0], [real_num_detection, -1, -1])
+        detection_masks_reframed = utils_ops.reframe_box_masks_to_image_masks(
+            detection_masks, detection_boxes, image.shape[1], image.shape[2])
+        detection_masks_reframed = tf.cast(
+            tf.greater(detection_masks_reframed, 0.5), tf.uint8)
+        # Follow the convention by adding back the batch dimension
+        tensor_dict['detection_masks'] = tf.expand_dims(
+            detection_masks_reframed, 0)
+      image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
+
+      # Run inference
+      output_dict = sess.run(tensor_dict,
+                             feed_dict={image_tensor: image})
+
+      # all outputs are float32 numpy arrays, so convert types as appropriate
+      num = int(output_dict['num_detections'][0])
+      # num = (output_dict['num_detections'][0])
+      classes = output_dict['detection_classes'][0].astype(np.int64)
+      boxes = output_dict['detection_boxes'][0]
+      scores = output_dict['detection_scores'][0]
+
+      obj_above_thresh = sum(n > threshold for n in scores)
+      print("detected %s objects in image above a %s score" % (obj_above_thresh, threshold))
+      output = []
+
+      # Add some metadata to the output
+      item = Object()
+      item.version = "0.0.1"
+      item.numObjects = int(obj_above_thresh)
+      item.threshold = threshold
+      # print(item.toJSON())
+      # print(type(obj_above_thresh), obj_above_thresh.shape)
+      output.append(item)
+
+      for c in range(0, len(classes)):
         class_name = category_index[classes[c]]['name']
         if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
             print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
+            
+            # print(type(class_name), type(scores[c].shape), type(boxes[c][0].shape), type(boxes[c][1].shape), type(boxes[c][2].shape), type(boxes[c][3].shape))
+            # print((class_name), (scores[c].shape), (boxes[c][0].shape), (boxes[c][1].shape), (boxes[c][2].shape), (boxes[c][3].shape))
+            # print((class_name), (scores[c]), (boxes[c][0]), (boxes[c][1]), (boxes[c][2]), (boxes[c][3]))
 
             item = Object()
             item.name = 'Object'
@@ -120,8 +208,12 @@ def get_objects(image, threshold=0.5):
             item.x = float(boxes[c][1])
             item.height = float(boxes[c][2])
             item.width = float(boxes[c][3])
-
+            
             output.append(item)
+            # print(item.toJSON())
 
-    outputJson = json.dumps([ob.__dict__ for ob in output])
-    return outputJson
+      # if 'detection_masks' in output_dict:
+      #   output_dict['detection_masks'] = output_dict['detection_masks'][0]
+      # outputJson = json.dumps([ob.__dict__ for ob in output])
+      outputJson = json.dumps(output, default = lambda x: x.__dict__)
+      return outputJson
