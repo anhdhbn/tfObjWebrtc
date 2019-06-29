@@ -219,7 +219,9 @@ def run_inference_for_single_image(image, graph, threshold):
         if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
             print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
             
-            print(type(class_name), type(scores[c].shape), type(boxes[c][0].shape), type(boxes[c][1].shape), type(boxes[c][2].shape), type(boxes[c][3].shape))
+            # print(type(class_name), type(scores[c].shape), type(boxes[c][0].shape), type(boxes[c][1].shape), type(boxes[c][2].shape), type(boxes[c][3].shape))
+            print((class_name), (scores[c].shape), (boxes[c][0].shape), (boxes[c][1].shape), (boxes[c][2].shape), (boxes[c][3].shape))
+            print((class_name), (scores[c]), (boxes[c][0]), (boxes[c][1]), (boxes[c][2]), (boxes[c][3]))
 
             item = Object()
             item.name = 'Object'
