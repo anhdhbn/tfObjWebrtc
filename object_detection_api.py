@@ -89,8 +89,9 @@ def get_objects(image, threshold=0.5):
     # Actual detection.
 
       # Run inference
-    output_dict = sess.run([detection_boxes, detection_scores, detection_classes, num_detections],
-                             feed_dict={image_tensor: image_np_expanded})
+    output_dict = sess.run(
+        [detection_boxes, detection_scores, detection_classes, num_detections],
+        feed_dict={image_tensor: image_np_expanded})
 
       # all outputs are float32 numpy arrays, so convert types as appropriate
     num = int(output_dict['num_detections'][0])
@@ -116,11 +117,6 @@ def get_objects(image, threshold=0.5):
       class_name = category_index[classes[c]]['name']
       if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
           print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
-            
-            # print(type(class_name), type(scores[c].shape), type(boxes[c][0].shape), type(boxes[c][1].shape), type(boxes[c][2].shape), type(boxes[c][3].shape))
-            # print((class_name), (scores[c].shape), (boxes[c][0].shape), (boxes[c][1].shape), (boxes[c][2].shape), (boxes[c][3].shape))
-            # print((class_name), (scores[c]), (boxes[c][0]), (boxes[c][1]), (boxes[c][2]), (boxes[c][3]))
-
           item = Object()
           item.name = 'Object'
           item.class_name = class_name
@@ -131,11 +127,6 @@ def get_objects(image, threshold=0.5):
           item.width = float(boxes[c][3])
             
           output.append(item)
-            # print(item.toJSON())
-
-      # if 'detection_masks' in output_dict:
-      #   output_dict['detection_masks'] = output_dict['detection_masks'][0]
-      # outputJson = json.dumps([ob.__dict__ for ob in output])
     outputJson = json.dumps(output, default = lambda x: x.__dict__)
     return outputJson
 
