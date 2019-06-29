@@ -78,7 +78,8 @@ with detection_graph.as_default():
 class Object(object):
     def __init__(self):
         self.name="webrtcHacks TensorFlow Object Detection REST API"
-
+    def obj_dict(obj):
+        return obj.__dict__
     def toJSON(self):
         return json.dumps(self.__dict__)
 
@@ -238,5 +239,5 @@ def run_inference_for_single_image(image, graph, threshold):
       # if 'detection_masks' in output_dict:
       #   output_dict['detection_masks'] = output_dict['detection_masks'][0]
       # outputJson = json.dumps([ob.__dict__ for ob in output])
-      outputJson = json.dumps(output)
+      outputJson = json.dumps(output, default=obj_dict)
       return outputJson
