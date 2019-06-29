@@ -231,4 +231,4 @@ def run_inference_for_single_image(image, graph, threshold):
 
       # if 'detection_masks' in output_dict:
       #   output_dict['detection_masks'] = output_dict['detection_masks'][0]
-  return output_dict
+  return output
