@@ -87,47 +87,43 @@ def get_objects(image, threshold=0.5):
     # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
     image_np_expanded = np.expand_dims(image_np, axis=0)
     # Actual detection.
-
-      # Run inference
-    output_dict = sess.run(
+    (boxes, scores, classes, num) = sess.run(
         [detection_boxes, detection_scores, detection_classes, num_detections],
         feed_dict={image_tensor: image_np_expanded})
 
-      # all outputs are float32 numpy arrays, so convert types as appropriate
-    num = int(output_dict['num_detections'][0])
-      # num = (output_dict['num_detections'][0])
-    classes = output_dict['detection_classes'][0].astype(np.int64)
-    boxes = output_dict['detection_boxes'][0]
-    scores = output_dict['detection_scores'][0]
+    classes = np.squeeze(classes).astype(np.int32)
+    scores = np.squeeze(scores)
+    boxes = np.squeeze(boxes)
 
     obj_above_thresh = sum(n > threshold for n in scores)
     print("detected %s objects in image above a %s score" % (obj_above_thresh, threshold))
+
     output = []
 
-      # Add some metadata to the output
+    # Add some metadata to the output
     item = Object()
     item.version = "0.0.1"
-    item.numObjects = int(obj_above_thresh)
+    item.numObjects = obj_above_thresh
     item.threshold = threshold
-      # print(item.toJSON())
-      # print(type(obj_above_thresh), obj_above_thresh.shape)
     output.append(item)
 
     for c in range(0, len(classes)):
-      class_name = category_index[classes[c]]['name']
-      if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
-          print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
-          item = Object()
-          item.name = 'Object'
-          item.class_name = class_name
-          item.score = float(scores[c])
-          item.y = float(boxes[c][0])
-          item.x = float(boxes[c][1])
-          item.height = float(boxes[c][2])
-          item.width = float(boxes[c][3])
-            
-          output.append(item)
-    outputJson = json.dumps(output, default = lambda x: x.__dict__)
+        class_name = category_index[classes[c]]['name']
+        if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
+            print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
+
+            item = Object()
+            item.name = 'Object'
+            item.class_name = class_name
+            item.score = float(scores[c])
+            item.y = float(boxes[c][0])
+            item.x = float(boxes[c][1])
+            item.height = float(boxes[c][2])
+            item.width = float(boxes[c][3])
+
+            output.append(item)
+
+    outputJson = json.dumps([ob.__dict__ for ob in output])
     return outputJson
 
 def run(image, threshold=0.5):
