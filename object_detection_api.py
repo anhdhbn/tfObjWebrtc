@@ -200,7 +200,35 @@ def run_inference_for_single_image(image, graph):
       output_dict['num_detections'] = int(output_dict['num_detections'][0])
       output_dict['detection_classes'] = output_dict['detection_classes'][0].astype(np.int64)
       output_dict['detection_boxes'] = output_dict['detection_boxes'][0]
-      output_dict['detection_scores'] = output_dict['detection_scores'][0]
+      scores = output_dict['detection_scores'][0]
+
+      obj_above_thresh = sum(n > threshold for n in scores)
+      print("detected %s objects in image above a %s score" % (obj_above_thresh, threshold))
+      output = []
+
+      # Add some metadata to the output
+      item = Object()
+      item.version = "0.0.1"
+      item.numObjects = obj_above_thresh
+      item.threshold = threshold
+      output.append(item)
+
+      for c in range(0, len(classes)):
+        class_name = category_index[classes[c]]['name']
+        if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
+            print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
+
+            item = Object()
+            item.name = 'Object'
+            item.class_name = class_name
+            item.score = float(scores[c])
+            item.y = float(boxes[c][0])
+            item.x = float(boxes[c][1])
+            item.height = float(boxes[c][2])
+            item.width = float(boxes[c][3])
+
+            output.append(item)
+
       # if 'detection_masks' in output_dict:
       #   output_dict['detection_masks'] = output_dict['detection_masks'][0]
   return output_dict
