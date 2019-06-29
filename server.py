@@ -3,7 +3,10 @@ import os
 from PIL import Image
 from flask import Flask, request, Response
 
+from flask_ngrok import run_with_ngrok
+
 app = Flask(__name__)
+run_with_ngrok(app)
 
 # for CORS
 @app.after_request
@@ -64,6 +67,8 @@ def image():
 
 if __name__ == '__main__':
 	# without SSL
+    import threading
+    # threading.Thread(target=app.run, kwargs={'host':'0.0.0.0','port':80}).start() 
     app.run(debug=True, host='0.0.0.0')
 
 	# with SSL
