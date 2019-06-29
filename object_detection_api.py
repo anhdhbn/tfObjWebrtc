@@ -212,7 +212,7 @@ def run_inference_for_single_image(image, graph, threshold):
       item.numObjects = int(obj_above_thresh)
       item.threshold = threshold
       # print(item.toJSON())
-      print(type(obj_above_thresh), obj_above_thresh.shape)
+      # print(type(obj_above_thresh), obj_above_thresh.shape)
       output.append(item)
 
       for c in range(0, len(classes)):
@@ -222,7 +222,7 @@ def run_inference_for_single_image(image, graph, threshold):
             
             # print(type(class_name), type(scores[c].shape), type(boxes[c][0].shape), type(boxes[c][1].shape), type(boxes[c][2].shape), type(boxes[c][3].shape))
             # print((class_name), (scores[c].shape), (boxes[c][0].shape), (boxes[c][1].shape), (boxes[c][2].shape), (boxes[c][3].shape))
-            print((class_name), (scores[c]), (boxes[c][0]), (boxes[c][1]), (boxes[c][2]), (boxes[c][3]))
+            # print((class_name), (scores[c]), (boxes[c][0]), (boxes[c][1]), (boxes[c][2]), (boxes[c][3]))
 
             item = Object()
             item.name = 'Object'
@@ -234,7 +234,7 @@ def run_inference_for_single_image(image, graph, threshold):
             item.width = float(boxes[c][3])
             
             output.append(item)
-            print(item.toJSON())
+            # print(item.toJSON())
 
       # if 'detection_masks' in output_dict:
       #   output_dict['detection_masks'] = output_dict['detection_masks'][0]
