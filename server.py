@@ -60,8 +60,8 @@ def image():
             threshold = 0.5
         else:
             threshold = float(threshold)
-        img = cv2.imdecode(numpy.fromstring(request.files['file'].read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
-        print("img", img)
+        # img = cv2.imdecode(numpy.fromstring(request.files['file'].read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
+        # print("img", img)
         # finally run the image through tensor flow object detection`
         image_object = Image.open(image_file)
         print("image_object", image_object)
