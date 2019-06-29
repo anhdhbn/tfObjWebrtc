@@ -92,7 +92,7 @@ def get_objects(image, threshold=0.5):
     print(help(sess.run))
     # Actual detection.
 
-    print("tensor_dict", [detection_boxes, detection_scores, detection_classes, num_detections])
+    print("tensor_dict", detection_boxes, detection_scores, detection_classes, num_detections)
     (boxes, scores, classes, num) = sess.run(
         [detection_boxes, detection_scores, detection_classes, num_detections],
         feed_dict={image_tensor: image_np_expanded})
