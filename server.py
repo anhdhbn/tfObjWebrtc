@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 
 from flask_ngrok import run_with_ngrok
 import cv2
+import numpy
 
 app = Flask(__name__)
 run_with_ngrok(app)
