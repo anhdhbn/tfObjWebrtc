@@ -17,14 +17,17 @@ def after_request(response):
     return response
 
 
+# @app.route('/')
+# def index():
+#     return Response('Tensor Flow object detection')
+
+
+# @app.route('/local')
+# def local():
+#     return Response(open('./static/local.html').read(), mimetype="text/html")
 @app.route('/')
-def index():
-    return Response('Tensor Flow object detection')
-
-
-@app.route('/local')
 def local():
-    return Response(open('./static/local.html').read(), mimetype="text/html")
+    return Response(open('./static/index.html').read(), mimetype="text/html")
 
 
 @app.route('/video')
@@ -47,7 +50,7 @@ def test():
 def image():
     try:
         image_file = request.files['image']  # get the image
-        print(image_file)
+        print("image_file", image_file)
         # Set an image confidence threshold value to limit returned data
         threshold = request.form.get('threshold')
         if threshold is None:
@@ -58,7 +61,9 @@ def image():
         # finally run the image through tensor flow object detection`
         image_object = Image.open(image_file)
         objects = object_detection_api.get_objects(image_object, threshold)
-        return objects
+        print("objects", objects)
+        # return objects
+        return Response("OK")
 
     except Exception as e:
         print('POST /image error: %e' % e)
