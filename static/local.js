@@ -49,14 +49,27 @@ function handleError(error) {
     console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
 }
 
-navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+function start() {
 
-navigator.mediaDevices.getUserMedia(constraints)
-    .then(stream => {
-        document.getElementById("myVideo").srcObject = stream;
-        console.log("Got local user video");
+    const videoSource = videoSelect.value;
+    const constraints = {
+        video: { deviceId: videoSource ? { exact: videoSource } : undefined }
+    };
 
-    })
-    .catch(err => {
-        console.log('navigator.getUserMedia error: ', err)
-    });
+    navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then(stream => {
+            document.getElementById("myVideo").srcObject = stream;
+            console.log("Got local user video");
+
+        })
+        .catch(err => {
+            console.log('navigator.getUserMedia error: ', err)
+        });
+
+}
+
+videoSelect.onchange = start;
+
+start()
