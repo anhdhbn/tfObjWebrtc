@@ -218,6 +218,8 @@ def run_inference_for_single_image(image, graph, threshold):
         class_name = category_index[classes[c]]['name']
         if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
             print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
+            
+            print(type(class_name), type(scores[c]), type(boxes[c][0]), type(boxes[c][1]), type(boxes[c][2]), type(boxes[c][3]))
 
             item = Object()
             item.name = 'Object'
@@ -227,7 +229,7 @@ def run_inference_for_single_image(image, graph, threshold):
             item.x = float(boxes[c][1])
             item.height = float(boxes[c][2])
             item.width = float(boxes[c][3])
-            print(type(class_name), type(score), type(y), type(x), type(height), type(width))
+            
             output.append(item)
             
 
