@@ -189,32 +189,32 @@ def get_objects(image, threshold=0.5):
       # print(type(obj_above_thresh), obj_above_thresh.shape)
     output.append(item)
 
-      for c in range(0, len(classes)):
-        class_name = category_index[classes[c]]['name']
-        if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
-            print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
+    for c in range(0, len(classes)):
+      class_name = category_index[classes[c]]['name']
+      if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
+          print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
             
             # print(type(class_name), type(scores[c].shape), type(boxes[c][0].shape), type(boxes[c][1].shape), type(boxes[c][2].shape), type(boxes[c][3].shape))
             # print((class_name), (scores[c].shape), (boxes[c][0].shape), (boxes[c][1].shape), (boxes[c][2].shape), (boxes[c][3].shape))
             # print((class_name), (scores[c]), (boxes[c][0]), (boxes[c][1]), (boxes[c][2]), (boxes[c][3]))
 
-            item = Object()
-            item.name = 'Object'
-            item.class_name = class_name
-            item.score = float(scores[c])
-            item.y = float(boxes[c][0])
-            item.x = float(boxes[c][1])
-            item.height = float(boxes[c][2])
-            item.width = float(boxes[c][3])
+          item = Object()
+          item.name = 'Object'
+          item.class_name = class_name
+          item.score = float(scores[c])
+          item.y = float(boxes[c][0])
+          item.x = float(boxes[c][1])
+          item.height = float(boxes[c][2])
+          item.width = float(boxes[c][3])
             
-            output.append(item)
+          output.append(item)
             # print(item.toJSON())
 
       # if 'detection_masks' in output_dict:
       #   output_dict['detection_masks'] = output_dict['detection_masks'][0]
       # outputJson = json.dumps([ob.__dict__ for ob in output])
-      outputJson = json.dumps(output, default = lambda x: x.__dict__)
-      return outputJson
+    outputJson = json.dumps(output, default = lambda x: x.__dict__)
+    return outputJson
 
 def run(image, threshold=0.5):
   image_np = load_image_into_numpy_array(image)
