@@ -92,6 +92,8 @@ def get_objects(image, threshold=0.5):
         [detection_boxes, detection_scores, detection_classes, num_detections],
         feed_dict={image_tensor: image_np_expanded})
 
+
+    print("boxes, scores, classes, num", boxes, scores, classes, num)
     classes = np.squeeze(classes).astype(np.int32)
     scores = np.squeeze(scores)
     boxes = np.squeeze(boxes)
