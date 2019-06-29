@@ -87,6 +87,7 @@ def get_objects(image, threshold=0.5):
     # print("image_np", image_np)
     # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
     image_np_expanded = np.expand_dims(image_np, axis=0)
+    print("image_np_expanded shape" , image_np_expanded.shape)
     # Actual detection.
     (boxes, scores, classes, num) = sess.run(
         [detection_boxes, detection_scores, detection_classes, num_detections],
