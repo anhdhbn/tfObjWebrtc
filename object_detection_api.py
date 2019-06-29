@@ -73,86 +73,20 @@ with detection_graph.as_default():
     detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
     detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
     num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-    # ops = detection_graph.get_operations()
-    # all_tensor_names = {output.name for op in ops for output in op.outputs}
-    # tensor_dict = {}
-    # for key in [
-    #     'num_detections', 'detection_boxes', 'detection_scores',
-    #     'detection_classes', 'detection_masks'
-    # ]:
-    #   tensor_name = key + ':0'
-    #   if tensor_name in all_tensor_names:
-    #     tensor_dict[key] = detection_graph.get_tensor_by_name(
-    #         tensor_name)
 
 # added to put object in JSON
 class Object(object):
     def __init__(self):
         self.name="webrtcHacks TensorFlow Object Detection REST API"
+
     def toJSON(self):
         return json.dumps(self.__dict__)
 
 def get_objects(image, threshold=0.5):
     image_np = load_image_into_numpy_array(image)
-    # print("image_np", image_np)
-    # print("image_np shape" , image_np.shape)
     # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
     image_np_expanded = np.expand_dims(image_np, axis=0)
-    print("image_np_expanded shape" , image_np_expanded.shape)
-    
     # Actual detection.
-
-    # print("tensor_dict", detection_boxes, detection_scores, detection_classes, num_detections)
-    # (boxes, scores, classes, num) = sess.run(
-    #     [detection_boxes, detection_scores, detection_classes, num_detections],
-    #     feed_dict={image_tensor: image_np_expanded})
-
-
-    # image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
-
-    
-    # (boxes, scores, classes, num) = sess.run(tensor_dict, feed_dict={image_tensor: image_np_expanded})
-
-    # print("boxes, scores, classes, num", boxes, scores, classes, num)
-    # classes = np.squeeze(classes).astype(np.int32)
-    # scores = np.squeeze(scores)
-    # boxes = np.squeeze(boxes)
-
-    # print("="*30)
-    # obj_above_thresh = sum(n > threshold for n in scores)
-    # print("detected %s objects in image above a %s score" % (obj_above_thresh, threshold))
-
-    # print("="*50)
-    # output = []
-
-    # # Add some metadata to the output
-    # item = Object()
-    # item.version = "0.0.1"
-    # item.numObjects = obj_above_thresh
-    # item.threshold = threshold
-    # output.append(item)
-    # print("="*100)
-    
-
-    # for c in range(0, len(classes)):
-    #     class_name = category_index[classes[c]]['name']
-    #     if scores[c] >= threshold:      # only return confidences equal or greater than the threshold
-    #         print(" object %s - score: %s, coordinates: %s" % (class_name, scores[c], boxes[c]))
-
-    #         item = Object()
-    #         item.name = 'Object'
-    #         item.class_name = class_name
-    #         item.score = float(scores[c])
-    #         item.y = float(boxes[c][0])
-    #         item.x = float(boxes[c][1])
-    #         item.height = float(boxes[c][2])
-    #         item.width = float(boxes[c][3])
-
-    #         output.append(item)
-
-    # outputJson = json.dumps([ob.__dict__ for ob in output])
-    # return outputJson
-    # image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
 
       # Run inference
     output_dict = sess.run([detection_boxes, detection_scores, detection_classes, num_detections],
